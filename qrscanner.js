@@ -3,11 +3,18 @@ const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 const output = document.getElementById('output');
 
+function setVideoDimensions() {
+    const { width, height } = video.getBoundingClientRect();
+    canvas.width = width;
+    canvas.height = height;
+}
+
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
     .then(stream => {
         video.srcObject = stream;
         video.setAttribute('playsinline', true);
         video.play();
+        setVideoDimensions();
         requestAnimationFrame(tick);
     });
 
