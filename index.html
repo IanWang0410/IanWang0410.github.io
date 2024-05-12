@@ -11,8 +11,8 @@
 
     <script>
         // Get access to the camera and display the video stream
-        alert("1");
-        navigator.mediaDevices.getUserMedia({ video: {facingMode:"enviroment"} })
+        alert("2");
+        navigator.mediaDevices.getUserMedia({ video: {facingMode:"user"} })
         .then(function(stream) {
             const video = document.getElementById('camera-preview');
             video.srcObject = stream;
