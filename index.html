@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Preview</title>
+</head>
+<body>
+    <h1>Camera Preview</h1>
+    <video id="camera-preview" width="100%" autoplay></video>
+
+    <script>
+        // Get access to the camera and display the video stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            const video = document.getElementById('camera-preview');
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            console.error('Error accessing camera:', err);
+        });
+    </script>
+</body>
+</html>
