@@ -5,8 +5,8 @@ const output = document.getElementById('output');
 
 function setVideoDimensions() {
     const { width, height } = video.getBoundingClientRect();
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width - 100;
+    canvas.height = height + 100;
 }
 
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
