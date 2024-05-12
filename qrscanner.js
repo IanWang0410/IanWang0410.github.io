@@ -20,7 +20,8 @@ function tick() {
             inversionAttempts: 'dontInvert',
         });
         if (code) {
-            alert(code.data);
+            const data = code.data;
+            alert(data);
         }
     }
     requestAnimationFrame(tick);
