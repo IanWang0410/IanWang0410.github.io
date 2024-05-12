@@ -3,24 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Preview</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.1.0/dist/jsQR.js"></script>
+    <title>QR Code Scanner</title>
 </head>
 <body>
-    <h1>camera Preview</h1>
-    <video id="camera-preview" width="100%" autoplay></video>
+    <div id="video-container">
+        <video id="video"></video>
+    </div>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <div id="output"></div>
 
-    <script>
-        // Get access to the camera and display the video stream
-        alert("3");
-        navigator.mediaDevices.getUserMedia({ video: {facingMode: "environment" } })
-        .then(function(stream) {
-            const video = document.getElementById('camera-preview');
-            video.srcObject = stream;
-            video.play();
-        })
-        .catch(function(err) {
-            console.error('Error accessing camera:', err);
-        });
-    </script>
+    <script src="qrscanner.js"></script>
 </body>
 </html>
