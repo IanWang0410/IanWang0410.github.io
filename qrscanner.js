@@ -3,19 +3,12 @@ const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 const output = document.getElementById('output');
 
-function setVideoDimensions() {
-    const { width, height } = video.getBoundingClientRect();
-    canvas.width = width - 100;
-    canvas.height = height + 100;
-}
 
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
     .then(stream => {
         video.srcObject = stream;
         video.setAttribute('playsinline', true);
         video.play();
-        setVideoDimensions(); // Set initial video dimensions
-        window.addEventListener('resize', setVideoDimensions); // Update dimensions on window resize
         requestAnimationFrame(tick);
     });
 
@@ -27,7 +20,7 @@ function tick() {
             inversionAttempts: 'dontInvert',
         });
         if (code) {
-            output.textContent = code.data;
+            alert(code.data);
         }
     }
     requestAnimationFrame(tick);
