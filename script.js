@@ -18,7 +18,7 @@ if ('serviceWorker' in navigator) {
   });
   
   // Add click event listener to the button
-  document.getElementById('notify-btn').addEventListener('click', function() {
+  document.getElementById('normal').addEventListener('click', function() {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker.ready.then(function(registration) {
         registration.showNotification('Notification!', {
@@ -37,7 +37,7 @@ if ('serviceWorker' in navigator) {
                 body: 'This is another noti',
                 icon: 'https://cdn.discordapp.com/attachments/562974113988214815/1246766268527149177/image.png?ex=665d9512&is=665c4392&hm=5fed14358de299e8a8eeb51cce3748b23fe522aff77bbfc00aa4c5083f05d1d8&'
             });
-        });
+        },5000);
       });
     }
   });
