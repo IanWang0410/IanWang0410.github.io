@@ -21,8 +21,22 @@ if ('serviceWorker' in navigator) {
   document.getElementById('notify-btn').addEventListener('click', function() {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker.ready.then(function(registration) {
-        registration.showNotification('Button Clicked', {
+        registration.showNotification('Notification!', {
           body: 'This is a noti',
+          icon: 'https://cdn.discordapp.com/attachments/562974113988214815/1246766268527149177/image.png?ex=665d9512&is=665c4392&hm=5fed14358de299e8a8eeb51cce3748b23fe522aff77bbfc00aa4c5083f05d1d8&'
+        });
+      });
+    }
+  });
+
+  document.getElementById('five-seconds').addEventListener('click', function() {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      navigator.serviceWorker.ready.then(function(registration) {
+        setTimeout(function(){
+            registration.showNotification('Noti after 5 secs!', {
+                body: 'This is another noti',
+                icon: 'https://cdn.discordapp.com/attachments/562974113988214815/1246766268527149177/image.png?ex=665d9512&is=665c4392&hm=5fed14358de299e8a8eeb51cce3748b23fe522aff77bbfc00aa4c5083f05d1d8&'
+            });
         });
       });
     }
