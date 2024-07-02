@@ -132,7 +132,6 @@
                     if (code) {
                         const data = code.data;
                         console.log("QR Code data:", data);
-                        sessionStorage.setItem('iot', data);
                         document.getElementById('Iot').value = data;
                     }
                     drawBox();
@@ -147,6 +146,10 @@
                 context.lineWidth = 2;
                 context.strokeRect(x, y, boxSize, boxSize);
             }
+
+            document.getElementById('ButtonAddIOT').addEventListener("click", function() {
+                sessionStorage.setItem('iot', document.getElementById('Iot').value);
+            });
 
         </script>
 </body>
