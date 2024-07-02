@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My IOT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        svg {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            fill: #000000;
+        }
+
+        #backButton {
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .inputIOT {
+            width: calc(100% - 60px);
+            height: 48px;
+            margin-right: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 2px;
+            box-sizing: border-box;
+            box-shadow: 0px 1px 0px #000000;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .input {
+            width: calc(100% - 0px);
+            height: 48px;
+            margin-right: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 2px;
+            box-sizing: border-box;
+            box-shadow: 0px 1px 0px #000000;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .qr-button {
+            width: 48px;
+            height: 48px;
+            margin-right: 20px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            box-sizing: border-box;
+            position: absolute;
+            right: 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-button img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        .submit-button {
+            width: calc(100% - 0px);
+            height: 48px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #3C66A7;
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #213e68;
+        }
+
+        .list {
+            width: 100%;
+            background-color: #ececec;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .list-item .text {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3%;
+            background-color: #ffffff;
+            color: #ffffff;
+            text-align: center;
+            font-size: 17px;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer a {
+            color: #343030;
+            text-decoration: none;
+            margin: 0 15px;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s ease;
+        }
+
+        .footer a:hover {
+            border-bottom: 2px solid #625f5f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick="window.location.href = 'Homepage.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#000000">
+                <path fill="black" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        <h1 class="title">我的 IOT</h1>
+        <p class="text">請輸入IOT ID</p>
+        <div>
+            <input type="number" class="inputIOT" id="sensor_Id" placeholder="請輸入您的 IOT" value="">
+            <button class="qr-button" id="qrPage">
+                <img src="content/baseline_qr_code_2_24.png" onclick="window.location.href = 'QRScanner.html'" alt="QR Code"
+                    style="vertical-align: middle;">
+            </button>
+        </div>
+        <p class="text">請輸入瓦斯空桶重</p>
+        <input type="text" class="input" id="GasBottleWeightEmpty" placeholder="請輸入瓦斯空桶重">
+        <p class="text">請輸入瓦斯規格</p>
+        <input type="text" class="input" id="GasBottleSpec" placeholder="請輸入瓦斯規格">
+        <button class="submit-button" id="ButtonAddIOT">+ 加 IOT</button>
+        <div class="list" id="IOTlist">
+        </div>
+    </div>
+    <div class="footer">
+        <a href="Homepage.html"><i class="fas fa-home"></i> 首页</a>
+        <a href="Order(Unfinished).html"><i class="fas fa-history"></i> 歷史訂單</a>
+        <a href="UserDashboard.html"><i class="fas fa-user"></i> 個人資料</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (sessionStorage.getItem(iot)) {
+                document.getElementById('sensor_Id').value = sessionStorage.getItem(iot)
+            }
+        });
+        
+        document.getElementById("ButtonAddIOT").addEventListener("click", function() {
+            var sensorId = document.getElementById("sensor_Id").value;
+            var gasBottleWeightEmpty = document.getElementById("GasBottleWeightEmpty").value;
+            var gasBottleSpec = document.getElementById("GasBottleSpec").value;
+
+            var listItem = document.createElement("div");
+            listItem.classList.add("list-item"); 
+            var textElement = document.createElement("p");
+            textElement.classList.add("text"); 
+            textElement.innerHTML = "ID: " + sensorId + ", 重量: " + gasBottleWeightEmpty + ", 規格: " + gasBottleSpec;
+
+            listItem.appendChild(textElement);
+            document.getElementById("IOTlist").appendChild(listItem);
+        });
+    </script>
+</body>
+
+</html>
