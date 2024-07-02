@@ -196,11 +196,11 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            if (sessionStorage.getItem(iot)) {
+            if (sessionStorage.getItem('iot')) {
                 document.getElementById('sensor_Id').value = sessionStorage.getItem(iot)
             }
         });
-        
+
         document.getElementById("ButtonAddIOT").addEventListener("click", function() {
             var sensorId = document.getElementById("sensor_Id").value;
             var gasBottleWeightEmpty = document.getElementById("GasBottleWeightEmpty").value;
