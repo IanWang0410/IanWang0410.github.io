@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Unified styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 微軟正黑體, Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #backButton {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 0px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin: 0 auto;
+        }
+
+        .person-icon-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        #personIcon {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section h2 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .input-text {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .input-text:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .separator,
+        .button-separator {
+            height: 1px;
+            background-color: #ddd;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        #saveInfo_button,
+        #logout_button {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        #saveInfo_button {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        #saveInfo_button:hover {
+            background-color: #0056b3;
+        }
+
+        #logout_button {
+            background-color: #ff4d4d;
+            color: #ffffff;
+        }
+
+        #logout_button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="backButton" onclick="window.location.href = 'homepage.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width="22" height="22">
+                    <path fill="#333" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+                </svg>
+            </button>
+            <h1 class="title">個人資料</h1>
+        </div>
+
+        <div class="person-icon-container">
+            <svg id="personIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="#666"
+                    d="M12,12c2.21,0 4,-1.79 4,-4s-1.79,-4 -4,-4 -4,1.79 -4,4 1.79,4 4,4zM12,14c-2.67,0 -8,1.34 -8,4v2h16v-2c0,-2.66 -5.33,-4 -8,-4z" />
+            </svg>
+        </div>
+
+        <div class="card">
+            <div class="section">
+                <h2>姓名</h2>
+                <input id="editName" class="input-text" type="text">
+            </div>
+            <div class="section">
+                <h2>室內電話</h2>
+                <input id="editHousePhone" class="input-text" type="text">
+            </div>
+            <div class="section">
+                <h2>手機號碼</h2>
+                <input id="editPhoneNo" class="input-text" type="text">
+            </div>
+            <div class="section">
+                <h2>地址</h2>
+                <input id="editCompanyAddress" class="input-text" type="text">
+            </div>
+            <div class="section">
+                <h2>電子信箱</h2>
+                <input id="editEmail" class="input-text" type="email">
+            </div>
+
+            <div class="separator"></div>
+            <button id="saveInfo_button">儲存</button>
+            <div class="button-separator"></div>
+            <button id="logout_button" onclick="logout()">登出</button>
+        </div>
+    </div>
+
+    <script>
+
+        const showDataAPI = '../api/Show_Worker_Profile.php';
+        const saveDataAPI = '../api/Save_Worker_Profile.php';
+
+        const workerId = sessionStorage.getItem('Worker_Id');
+        function fetchWorkerData() {
+            if (!workerId) {
+                console.error("Worker ID is missing from session storage.");
+                return;
+            }
+
+            //console.log("Fetching worker data for ID:", workerId);
+
+            fetch(showDataAPI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ id: workerId })
+            })
+            .then(response => {
+                console.log("Raw response:", response);
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Parsed response data:", data);
+                if (data.response === 'success') {
+                    document.getElementById("editName").value = data.Worker_Name || "";
+                    document.getElementById("editHousePhone").value = data.Worker_Tel || "";
+                    document.getElementById("editPhoneNo").value = data.Worker_Phone || "";
+                    document.getElementById("editCompanyAddress").value = data.Worker_Address || "";
+                    document.getElementById("editEmail").value = data.Worker_Email || "";
+                } else {
+                    console.error("Failed to fetch worker data:", data);
+                }
+            })
+            .catch(error => console.error('Error fetching worker data:', error));
+        }
+
+        window.onload = fetchWorkerData;
+
+
+        document.getElementById("saveInfo_button").addEventListener("click", function(event){
+            event.preventDefault();
+            updateWorker();
+        });
+
+        function updateWorker() {
+            const data = new URLSearchParams();
+            data.append('id', workerId);
+            data.append('name', document.getElementById('editName').value);
+            data.append('houseTel', document.getElementById('editHousePhone').value);
+            data.append('phone', document.getElementById('editPhoneNo').value);
+            data.append('address', document.getElementById('editCompanyAddress').value);
+            data.append('email', document.getElementById('editEmail').value);
+
+            fetch(saveDataAPI, { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+                //console.log("Raw response from server:", result); 
+                if (result.trim() === 'success') {
+                    alert('保存成功！');
+                } else {
+                    alert('保存失敗！');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = "login.html"; // Redirect to login page after logout
+        }
+    </script>
+</body>
+</html>

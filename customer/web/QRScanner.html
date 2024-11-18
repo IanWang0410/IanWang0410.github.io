@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+
+    <style>
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        svg {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            fill: #000000;
+        }
+
+        #backButton {
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .input {
+            width: calc(100% - 0px);
+            height: 48px;
+            margin-right: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 2px;
+            box-sizing: border-box;
+            box-shadow: 0px 1px 0px #000000;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .submit-button {
+            width: calc(100% - 0px);
+            height: 48px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #3C66A7;
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #213e68;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick="window.location.href = 'UserIOT.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#000000">
+                <path fill="black" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        <h1 class="title">掃描IOT的Qr Code</h1>
+        <div id="video-container">
+            <video id="video"></video>
+        </div>
+        <p class="text">IOT編號:</p>
+        <input type="text" class="input" id="Iot" placeholder="請輸入IOT編號" value="">
+        <button class="submit-button" onclick="window.location.href = 'UserIOT.html'" id="ButtonAddIOT">確認</button>
+        <canvas id="canvas" width="300" height="200" style="display: block;"></canvas>
+            <div id="output"></div>
+        </canvas>
+        <script>
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            const output = document.getElementById('output');
+
+            const boxSize = 200;
+            const boxColor = 'black';
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.setAttribute('playsinline', true);
+                    video.play();
+                    requestAnimationFrame(tick);
+                });
+
+            function tick() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: 'dontInvert',
+                    });
+                    if (code) {
+                        const data = code.data;
+                        console.log("QR Code data:", data);
+                        document.getElementById('Iot').value = data;
+                    }
+                    drawBox();
+                }
+                requestAnimationFrame(tick);
+            }
+            function drawBox() {
+                const x = (canvas.width - boxSize) / 2;
+                const y = (canvas.height - boxSize) / 2;
+
+                context.strokeStyle = boxColor;
+                context.lineWidth = 2;
+                context.strokeRect(x, y, boxSize, boxSize);
+            }
+
+            document.getElementById('ButtonAddIOT').addEventListener("click", function() {
+                sessionStorage.setItem('iot', document.getElementById('Iot').value);
+            });
+
+        </script>
+</body>
+
+</html>

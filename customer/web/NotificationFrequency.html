@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Frequency</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        svg {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            fill: #000000;
+        }
+
+        #backButton {
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .subtitle {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .description {
+            text-align: center;
+            margin: 30px;
+            font-size: 17px;
+        }
+
+        .action-button {
+            background-color: #3c66a7;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 90px;
+            cursor: pointer;
+            box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background-color: #213e68;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5%;
+            background-color: #ffffff;
+            color: #ffffff;
+            text-align: center;
+            font-size: 17px;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer a {
+            color: #343030;
+            text-decoration: none;
+            margin: 0 15px;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s ease;
+        }
+
+        .footer a:hover {
+            border-bottom: 2px solid #625f5f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <button id="backButton" onclick = "window.location.href = 'UserDashboard.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#000000">
+                <path fill="black" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        <div id="delivertitle" class="title"><br>服務方式</div>
+        <div id="frequency_WeightTitle" class="subtitle">剩餘容量警示通知</div>
+        <div class="description">
+            剩餘用量小於 <b>3公斤</b> 時，本系統會開始發通知
+            <br>每 下午14:00 和 18:00
+        </div>
+        <button id="enter" class="action-button" onclick="save()">確認</button>
+    </div>
+
+    <div class="footer">
+        <a href="Homepage.html"><i class="fas fa-home"></i> 首頁</a>
+        <a href="Order(Unfinished).html"><i class="fas fa-history"></i> 歷史訂單</a>
+        <a href="UserDashboard.html"><i class="fas fa-user"></i> 個人資料</a>
+    </div>
+
+    <script>
+        function save() {
+            console.log('Save button clicked!');
+            window.location.href = "Homepage.html";
+        }
+    </script>
+
+</body>
+
+</html>

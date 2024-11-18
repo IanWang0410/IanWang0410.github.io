@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單查詢</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        #backButton {
+            align-self: flex-start;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        #searchtitle {
+            font-size: 35px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 25px;
+        }
+
+        #orderButtons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #order_unfinished,
+        #order_finished {
+            width: 48%;
+            height: 56.9px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        #order_unfinished {
+            background-color: #808080;
+            color: #ffffff;
+        }
+
+        #order_finished {
+            background-color: #ffffff;
+            color: #808080;
+        }
+
+        #list_item {
+            width: 100%;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        ul li a {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+        }
+
+        ul li a:hover {
+            background-color: #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        #enterSearch {
+            width: 100%;
+            height: 60px;
+            background-color: #0000ff;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        #enterSearch:hover {
+            background-color: #02029c;
+        }
+
+        .footer {
+            width: 100%;
+            margin-top: 35px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer a {
+            color: #343030;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #3C66A7;
+        }
+
+        .footer a i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick="window.location.href = 'homepage.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#000000">
+                <path fill="black" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        <h1 id="searchtitle">訂單查詢</h1>
+        <div id="orderButtons">
+            <button id="order_unfinished" onclick="redirectToUnfinished()">未完成</button>
+            <button id="order_finished">已完成</button>
+        </div>
+        <div id="list_item">
+            <span>未完成清單</span>
+            <ul id="unorderList"></ul>
+        </div>
+
+        <footer class="footer">
+            <a href="homepage.html">
+                <i class="fas fa-home"></i> <span>首頁</span>
+            </a>
+            <a href="Edit Profile.html">
+                <i class="fas fa-user"></i> <span>個人資料</span>
+            </a>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchOrders();
+        });
+
+        function fetchOrders() {
+            const UnOrderListAPI = "../api/Worker_OrderList.php";
+            const workerId = sessionStorage.getItem('Worker_Id');
+            fetch(UnOrderListAPI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + workerId
+            })
+            .then(response => response.text())
+            .then(text => {
+                return JSON.parse(text);
+            })
+            .then(data => {
+                const unorderList = document.getElementById('unorderList');
+                unorderList.innerHTML = '';
+                data.forEach(order => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a href="Order_info(Finished).html?orderId=${order.ORDER_Id}">${order.ORDER_Id} ${order.ORDER_Details || order.DELIVERY_Address}</a>`;
+                    unorderList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function redirectToUnfinished() {
+            window.location.href = "Order(Unfinished).html";
+        }
+    </script>
+
+</body>
+
+</html>

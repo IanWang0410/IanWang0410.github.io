@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家人邀請碼</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        svg {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            fill: #000000;
+        }
+
+        #backButton {
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 60px 18px 0;
+        }
+
+        .title {
+            font-size: 33px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .section {
+            margin-top: 20px;
+            background-color: #e4e3e3;
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .section h2 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #3d3c3c;
+        }
+
+        .section input[type="text"] {
+            width: 95%;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #000000;
+            border: none;
+            background-color: transparent;
+            margin-top: 5px;
+            padding: 10px;
+            box-shadow: 0px 1px 0px rgba(41, 52, 85, 0.5);
+        }
+
+        .section button {
+            width: 100%;
+            margin-top: 10px;
+            background-color: #3c66a7;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section button:hover {
+            background-color: #213e68;
+        }
+
+        .list-view {
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5%;
+            background-color: #ffffff;
+            color: #ffffff;
+            text-align: center;
+            font-size: 17px;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer a {
+            color: #343030;
+            text-decoration: none;
+            margin: 0 15px;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s ease;
+        }
+
+        .footer a:hover {
+            border-bottom: 2px solid #625f5f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick = "window.location.href = 'UserDashboard.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#000000">
+                <path fill="black" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        <div class="content">
+            <h1 class="title">家人邀請碼</h1>
+            <div class="section">
+                <h2>我的ID:</h2>
+                <p id="id"></p>
+                <hr>
+                <h2>家人的手機號碼：</h2>
+                <input type="text" id="requestID_Input" placeholder="請輸入家人的手機號碼">
+                <button id="confirm_exchange_button">確認</button>
+            </div>
+            <h1 class="title">關聯家人</h1>
+            <div class="list-view" id="list">
+            </div>
+        </div>
+        <div class="footer">
+            <a href="Homepage.html"><i class="fas fa-home"></i> 首頁</a>
+            <a href="Order(Unfinished).html"><i class="fas fa-history"></i> 歷史訂單</a>
+            <a href="UserDashboard.html"><i class="fas fa-user"></i> 個人資料</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const email = sessionStorage.getItem('email');
+            
+            if (email) {
+                const e = new URLSearchParams();
+                e.append('email', email);
+
+                fetch('../api/Find_Customer_ID.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: e
+                })
+                .then(response => response.json())
+                .then(data => {
+                    id = data.CUSTOMER_Id;
+
+                    if(id) {
+                        document.getElementById('id').innerHTML = id;
+                        
+                        const s = new URLSearchParams();
+                        s.append('id', id);
+
+                        fetch('../api/Show_FamilyMember_2.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: s
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            const list = document.getElementById("list");
+                            list.innerHTML = '';
+
+                            if (data === 'failure') {
+                                const listNull = document.createElement('p');
+                                listNull.textContent = '查無資訊';
+                                list.appendChild(listNull);
+                            } else {
+                                data.forEach(member => {
+                                    const listItem = document.createElement('li');
+                                    listItem.textContent = `ID: ${member.Customer_Id}, 姓名: ${member.Customer_Name}`;
+                                    list.appendChild(listItem);
+                                });
+                            }
+
+                        })
+                        
+                    }
+                })
+            }
+        })
+
+        document.getElementById('confirm_exchange_button').addEventListener('click', function() {
+            const Family_Phone = document.getElementById('requestID_Input').value;
+            
+            const m = new URLSearchParams();
+                
+                m.append('id', id);
+                m.append('Family_Phone', Family_Phone)
+                        
+                fetch('../api/Save_FamilyMember_2.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: m
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const cond = data.condition;
+                    console.log(cond);
+                    if (cond === -1) {
+                        alert('查無此手機號碼')
+                    }
+                    else {
+                        alert('成功! 請重新整理頁面以查看結果')
+                    }
+                }) 
+        })
+
+        
+    </script>
+</body>
+
+</html>

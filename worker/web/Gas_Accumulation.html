@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>殘氣結算</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic reset and layout settings */
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Back Button Styling */
+        #backButton {
+            align-self: flex-start;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        #backButton svg {
+            width: 24px;
+            height: 24px;
+            fill: #333;
+        }
+
+        /* Title Styling */
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+            margin: 20px 0 40px;
+            text-align: center;
+        }
+
+        .label {
+            font-size: 16px;
+            color: #333;
+            text-align: left;
+            width: 100%;
+            margin: 10px 0 10px;
+        }
+
+        /* Input box */
+        .input-field {
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+            padding: 12px;
+            box-sizing: border-box;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        /* Button */
+        .button {
+            width: 100%;
+            max-width: 350px;
+            background-color: #3C66A7;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #2254a6;
+        }
+
+        select {
+            width: 100%;
+            max-width: 350px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-left: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(34, 84, 166, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick="window.history.back()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        
+        <h1 class="title">殘氣結算</h1>
+
+        <!-- Labels and input field -->
+        <div class="label">IoT：</div>
+        <select id="iot"></select>
+        <div class="label">時間：</div>
+        <select id="time"></select>
+
+        <div class="label">剩餘殘氣量 (kg)：</div>
+        <label style="font-size: 13px; font-style: italic; color: red;">※注意: 請選取上方IoT時間以自動計算殘氣量。若資料明顯不符，請選取稍早時間或是依照現場狀況自行輸入。</label>
+        <input type="text" id="remainWeight" class="input-field" style="margin-bottom: 2px;">
+
+        <div class="label">新瓦斯桶：</div>
+        <label style="font-size: 13px;">※請選取即將放上IoT裝置的瓦斯桶。</label>
+        <select id="newGasTank" style="margin-bottom:40px ;"></select>
+
+        <button class="button" onclick="finish()">確認殘氣量及完成訂單</button>
+    </div>
+
+    <script>
+        const apiURL = '../api/Show_IOT.php';
+        const historyApiURL = '../api/iot_history.php';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const customerId = sessionStorage.getItem('Customer_ID');
+            const selectIot = document.getElementById('iot');
+            const selectTime = document.getElementById('time');
+            const remainWeightInput = document.getElementById('remainWeight');
+            const oldGasTankSelect = document.getElementById('oldGasTank');
+            const newGasTankSelect = document.getElementById('newGasTank');
+            let historyData = []; // To store history data for selected IOT
+            
+            
+            const gasIds = JSON.parse(sessionStorage.getItem('gasIds')) || [];
+            gasIds.forEach(gasId => {
+                const optionNew = document.createElement('option');
+                optionNew.value = gasId;
+                optionNew.textContent = gasId;
+                newGasTankSelect.appendChild(optionNew);
+            });
+
+            // Fetch options for select dropdown
+            fetch(apiURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + customerId,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.SENSOR_Id;
+                        option.textContent = item.SENSOR_Id;
+                        selectIot.appendChild(option);
+                    });
+                } else {
+                    
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No IOT data available';
+                    selectIot.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+            // Event listener for IoT select change
+            selectIot.addEventListener('change', function () {
+                const selectedIotId = selectIot.value;
+                if (selectedIotId) {
+                    // Fetch history data for the selected IoT ID
+                    fetch(historyApiURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'id=' + selectedIotId,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        historyData = data; // Store history data
+                        selectTime.innerHTML = ''; // Clear previous options
+                        const placeholderOption = document.createElement('option');
+                        placeholderOption.value = '';
+                        placeholderOption.textContent = '請選擇時間';
+                        selectTime.appendChild(placeholderOption);
+                        data.forEach(record => {
+                            const option = document.createElement('option');
+                            option.value = record.SENSOR_Time;
+                            option.textContent = record.SENSOR_Time;
+                            selectTime.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching history:', error));
+                }
+            });
+
+            // Event listener for Time select change
+            selectTime.addEventListener('change', function () {
+                const selectedTime = selectTime.value;
+                const selectedRecord = historyData.find(record => record.SENSOR_Time === selectedTime);
+                if (selectedRecord) {
+                    remainWeightInput.value = selectedRecord.SENSOR_Weight;
+                }
+            });
+        });
+
+        function finish() {
+            const y = confirm('確認殘氣累積及完成訂單?');
+            const iot = document.getElementById('iot').value;
+            const remain = document.getElementById('remainWeight').value;
+            const gas_id = document.getElementById('newGasTank').value;
+            const customer_id = sessionStorage.getItem('Customer_ID');
+            const order_id = sessionStorage.getItem('Order_ID');
+            
+            const a = new URLSearchParams();
+            a.append('iot', iot);
+            a.append('remain', remain);
+            a.append('gas_id', gas_id);
+            a.append('customer_id', customer_id);
+            a.append('order_id', order_id);
+
+            if (y && iot!=null && remain!='' && gas_id!=null && customer_id!=null && order_id!=null) {
+                fetch('../api/Finish_Order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: a,
+                })
+                
+                alert('訂單已完成!');
+                sessionStorage.removeItem('Customer_ID');
+                sessionStorage.removeItem('Order_ID');
+                sessionStorage.removeItem('gasIds');
+                window.location.href = 'Order(Unfinished).html';
+                
+            } else {
+                alert('請填入所有必填欄位!');
+                return;
+            }
+            
+        }
+    </script>
+</body>
+
+</html>

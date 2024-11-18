@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 微軟正黑體, Arial, sans-serif;
+            background-color: #ffffff;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 85%;
+        }
+
+        .card img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .info-container {
+            text-align: left;
+        }
+
+        .info-container h1 {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .worker-profile p {
+            font-size: 14px;
+            color: #666;
+            margin: 2px 0;
+        }
+
+        .button-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            width: 90%;
+        }
+
+        .button:first-child {
+            background-color: #3C66A7;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:last-child {
+            background-color: #7099DA;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:hover {
+            background-color: #2254a6;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 15px 0;
+            margin-top: 35px;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer a {
+            color: #343030;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer a:hover {
+            color: #3C66A7;
+        }
+
+        .footer a i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <img src="resource/gasguardlogo_foreground.png" alt="風景圖" style="height: 100px; width: 100px;">
+            <div class="info-container">
+                <h1 id="worker-name">姓名: </h1>
+                <h1 id="worker-phone">電話: </h1>
+                <h1 id="worker-address">地址: </h1>
+            </div>
+        </div>
+
+        <div class="button-grid">
+            <a href="Order(Unfinished).html" class="button">今日訂單</a>
+        </div>
+
+        <div class="footer">
+            <a href="homepage.html"><i class="fas fa-home"></i> 首頁</a>
+            <a href="Edit Profile.html"><i class="fas fa-user"></i> 個人資料</a>
+        </div>
+    </div>
+    <script>
+        const workerId = sessionStorage.getItem('Worker_Id');
+        
+        if (workerId) {
+            const showDataAPI = "../api/Show_Worker_Profile.php"; 
+
+            fetch(showDataAPI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + workerId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response === "success") {
+                    // Populate the worker information
+                    document.getElementById('worker-name').textContent = '姓名: ' + data.Worker_Name;
+                    document.getElementById('worker-phone').textContent = '電話: ' + data.Worker_Phone;
+                    document.getElementById('worker-address').textContent = '地址: ' + data.Worker_Address;
+                } else {
+                    console.error("Failed to load worker data:", data.response);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+                document.getElementById('worker-name').textContent = 'Error loading data';
+                document.getElementById('worker-phone').textContent = '';
+                document.getElementById('worker-address').textContent = '';
+            });
+        } else {
+            console.error("Worker ID is not set in session storage.");
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Center body content */
+        body {
+            background-color: #ffffff;
+            font-family: 微軟正黑體, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a5497;
+            margin-bottom: 20px;
+        }
+
+        #logoImage {
+            width: 50%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Input fields */
+        #email,
+        #password {
+            width: calc(100% - 40px);
+            height: 48px;
+            margin: 10px 0;
+            border: 1px solid #3f4d8a;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(41, 52, 85, 0.1);
+            text-align: center;
+            padding: 0 10px;
+            font-size: 16px;
+        }
+
+        /* Login button */
+        #login {
+            width: calc(100% - 40px);
+            height: 48px;
+            background-color: #4a5497;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        #login:hover {
+            background-color: #292c6a;
+        }
+
+        /* Button container for "Forget Password" and "Register" */
+        .button-container {
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .button-container button {
+            width: 48%;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #4a5497;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .button-container button:hover {
+            color: #292c6a;
+        }
+
+        /* Vertical divider */
+        .button-container::before {
+            content: "";
+            width: 1px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ccc;
+        }
+
+        #result {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="title">登入</h1>
+        <div style="width: 100%; margin: 25px 0; display: flex; flex-direction: column; align-items: center;">
+            <img id="logoImage" src="resource/gasguardlogo_foreground.png" alt="Logo">
+            <form id="loginForm">
+                <input id="email" type="email" name="email" placeholder="請輸入您的電子信箱" required>
+                <input id="password" type="password" name="password" placeholder="請輸入您的密碼" required>
+                <button id="login" type="submit">登入</button>
+            </form>
+        </div>
+        <div class="button-container">
+            <button id="forgetPasswordButton" onclick="redirectToForgetPassword()">忘記密碼</button>
+            <button id="registerButton" onclick="redirectToRegistrationPage()">註冊</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const apiURL = '../api/login.php';
+        const WIDurl = '../api/Find_Worker_ID.php';
+
+        function redirectToHomepage() {
+            window.location.href = "Homepage.html";
+        }
+
+        function redirectToForgetPassword() {
+            window.location.href = "Forget Password (1).html";
+        }
+
+        function redirectToRegistrationPage() {
+            window.location.href = "Registration.html";
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const email = document.getElementById('email').value;
+            const result = document.getElementById('result');
+            result.textContent = '';
+
+            fetch(WIDurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response === 'success') {
+                    sessionStorage.setItem('Worker_Id', data.Worker_Id);
+                } else {
+                    result.textContent = '找不到該信箱對應的員工。';
+                }
+            })
+            .catch(error => {
+                result.textContent = '查詢員工ID時發生錯誤。';
+                console.error('Error:', error);
+            });
+
+            fetch(apiURL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === 'success') {
+                    redirectToHomepage();
+                } else {
+                    result.textContent = '登入失敗，請檢查您的信箱和密碼。';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新瓦斯桶</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic reset and layout settings */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 微軟正黑體, Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        /* Back Button Styling */
+        #backButton {
+            align-self: flex-start;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Title Styling */
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+            margin: 20px 0 40px;
+            text-align: center;
+        }
+
+        /* Card and Form Elements */
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            max-width: 320px;
+            width: 100%;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .section h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .input-text {
+            width: 100%;
+            max-width: 140px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-left: 10px;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+        /* Video Container */
+        .video-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .video-container video {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 200px;
+            height: 100%;
+            max-height: 200px;
+            transform: scaleX(-1); /* Mirror effect */
+        }
+
+        /* Button Styling */
+        .button#next_button {
+            width: 100%;
+            max-width: 320px;
+            background-color: #343030;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .button#next_button:hover {
+            background-color: #857d7d;
+        }
+
+        .button#save_button {
+            width: 100%;
+            max-width: 150px;
+            background-color: #4a75d1;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .button#save_button:hover {
+            background-color: #2254a6;
+        } 
+
+        /* Footer Styling */
+        .footer {
+            width: 100%;
+            padding: 15px 0;
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer a {
+            color: #343030;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer a:hover {
+            color: #3C66A7;
+        }
+
+        .footer a i {
+            margin-right: 8px;
+        }
+
+        select#gas_type {
+            width: 100%;
+            max-width: 140px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-left: 10px;
+            box-sizing: border-box;
+        }
+
+        select#gas_type:focus {
+            outline: none; /* Remove focus outline */
+            box-shadow: 0 0 0 3px rgba(34, 84, 166, 0.5); /* Add custom focus style */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick="window.location.href = window.history.back()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#000000">
+                <path fill="black" d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+
+        <div class="card">
+            <div class="title">更新瓦斯桶資訊</div>
+            
+            <div class="video-container">
+                <video id="video"></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+            </div>
+
+            <label style="font-size: 13px; font-style: italic; color: red;">※注意: 請掃描每一個新、舊桶以方便追蹤瓦斯桶。</label>
+
+            <div class="section">
+                <h2>輸入瓦斯桶編號</h2>
+                <input id="originalGasIdInput" class="input-text" type="text">
+            </div>
+            <div class="section">
+                <h2>輸入空桶重量</h2>
+                <input id="gasWeightEmptyInput" class="input-text" type="text">
+            </div>
+            <div class="section">
+                <h2>種類</h2>
+                <select name="GAS_Type" id="gas_type">
+                    <option value=""></option>
+                    <option value="tradition">傳統鋼瓶</option>
+                    <option value="composite">複合材料瓶</option>
+                </select>
+            </div>
+            
+            <button id="save_button" class="button" onclick="validateAndRedirect()">更新</button>
+        </div>
+        <button id="next_button" class="button" onclick="window.location.href='Gas_Accumulation.html'">確認所有瓦斯桶更新完畢</button>
+        <div class="footer">
+            <a href="homepage.html"><i class="fas fa-home"></i> 首頁</a>
+            <a href="Edit Profile.html"><i class="fas fa-user"></i> 個人資料</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const apiURL = '../api/registGas.php';
+    
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play();
+                requestAnimationFrame(tick);
+            })
+            .catch(error => {
+                alert('無法獲取攝像頭，請確保攝像頭可用並已授權網站訪問。');
+            });
+    
+        function tick() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                if (code) {
+                    document.getElementById('originalGasIdInput').value = code.data;
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+    
+        function saveGasIdToSessionStorage(gasId) {
+            let gasIds = JSON.parse(sessionStorage.getItem('gasIds')) || [];
+            gasIds.push(gasId);
+            sessionStorage.setItem('gasIds', JSON.stringify(gasIds));
+        }
+    
+        function validateAndRedirect() {
+            const originalGasId = document.getElementById('originalGasIdInput').value;
+            const gasWeightEmpty = document.getElementById('gasWeightEmptyInput').value;
+            const workerId = sessionStorage.getItem('Worker_Id');
+    
+            // Validate ID format - exactly 10 characters, alphanumeric only
+            const idPattern = /^[A-Za-z0-9]{10}$/;
+            if (!idPattern.test(originalGasId)) {
+                alert('瓦斯桶編號必須是10個字母和數字組合的樣式');
+                return;
+            }
+    
+            if (!originalGasId || !gasWeightEmpty) {
+                alert('請填寫瓦斯桶編號和空桶重量');
+                return;
+            }
+    
+            // First fetch to check if the gas tank is already registered
+            fetch('../api/checkGasRegistration.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${originalGasId}`
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === "registered") {
+                    // Gas tank is already registered, update the empty weight
+                    alert('此瓦斯桶已註冊，更新資料中...');
+                    
+                    fetch('../api/updateGasWeight.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `id=${originalGasId}&gasWeightEmpty=${gasWeightEmpty}&Worker_Id=${workerId}`
+                    })
+                    .then(response => response.text())
+                    .then(updateResult => {
+                        if (updateResult.trim() === "success") {
+                            alert('資料已成功更新');
+                            saveGasIdToSessionStorage(originalGasId); // Store the ID in session storage
+                        } else {
+                            alert('更新失敗');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                } else if (result.trim() === "not_registered") {
+                    // Gas tank is not registered, prompt the user to select the type
+                    const y = confirm('此瓦斯桶未註冊，點擊確定以進行註冊。 \n   (需填寫瓦斯桶種類)');
+                    if (y) {
+                        const gasType = document.getElementById('gas_type').value;
+    
+                        if (!gasType) {
+                            alert('請選擇瓦斯桶種類');
+                            return;
+                        }
+
+                        // Register the new gas tank
+                        fetch('../api/registGas.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: `id=${originalGasId}&gasWeightEmpty=${gasWeightEmpty}&gasType=${gasType}&Worker_Id=${workerId}`
+                        })
+                        .then(response => response.text())
+                        .then(registerResult => {
+                            if (registerResult.trim() === "success") {
+                                alert('新瓦斯桶已成功註冊');
+                                saveGasIdToSessionStorage(originalGasId); // Store the ID in session storage
+                            } else {
+                                alert('註冊瓦斯桶失敗，請檢查輸入資料。');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    } else {
+                        return;
+                    }
+                                        
+                } else {
+                    alert('檢查瓦斯桶註冊狀態時發生錯誤。');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+    
+</body>
+
+</html>
