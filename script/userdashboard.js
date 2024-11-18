@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function fetchUserInfo() {
     let userEmail = "123'@'123.com";
 
-    fetch('http://localhost/gas/api/Find_Customer_ID.php', {
+    fetch('../api/Find_Customer_ID.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
