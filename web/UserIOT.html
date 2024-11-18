@@ -188,8 +188,8 @@
         <div class="list" id="IOTlist">
         </div>
     </div>
-    <div class="footer1">
-        <a href="Homepage.html"><i class="fas fa-home"></i> 首页</a>
+    <div class="footer">
+        <a href="Homepage.html"><i class="fas fa-home"></i> 首頁</a>
         <a href="Order(Unfinished).html"><i class="fas fa-history"></i> 歷史訂單</a>
         <a href="UserDashboard.html"><i class="fas fa-user"></i> 個人資料</a>
     </div>
@@ -206,14 +206,60 @@
             var gasBottleWeightEmpty = document.getElementById("GasBottleWeightEmpty").value;
             var gasBottleSpec = document.getElementById("GasBottleSpec").value;
 
-            var listItem = document.createElement("div");
-            listItem.classList.add("list-item"); 
-            var textElement = document.createElement("p");
-            textElement.classList.add("text"); 
-            textElement.innerHTML = "ID: " + sensorId + ", 重量: " + gasBottleWeightEmpty + ", 規格: " + gasBottleSpec;
+            const email = sessionStorage.getItem('email');
 
-            listItem.appendChild(textElement);
-            document.getElementById("IOTlist").appendChild(listItem);
+            if (email) {
+                const e = new URLSearchParams();
+                e.append('email', email);
+
+                fetch('../api/Find_Customer_ID.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: e
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Customer data:', data);
+                    const id = data.CUSTOMER_Id;
+
+                    if (id) {
+                        const i = new URLSearchParams();
+                        i.append('id', id);
+                        i.append('sensor_id', sensorId);
+                        i.append('gasEmptyWeight', gasBottleWeightEmpty);
+                        i.append('gasSpecWeight', gasBottleSpec);
+
+                        
+                        fetch('../api/Save_IOT.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: i
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data.trim() === 'success') {
+                                var listItem = document.createElement("div");
+                                listItem.classList.add("list-item"); 
+                                var textElement = document.createElement("p");
+                                textElement.classList.add("text"); 
+                                textElement.innerHTML = "ID: " + sensorId + ", 重量: " + gasBottleWeightEmpty + ", 規格: " + gasBottleSpec;
+
+                                listItem.appendChild(textElement);
+                                document.getElementById("IOTlist").appendChild(listItem);
+
+                                alert('新增成功!');
+                            } else {
+                                alert('新增失敗! 重複新增相同IOT');
+                            }
+                        })    
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }  
         });
     </script>
 </body>

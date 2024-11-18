@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Gas</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: 微軟正黑體, Arial, sans-serif;
+            background-color: #fff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            fill: #000000;
+        }
+
+        #backButton {
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .title-container {
+            margin: 10px 30px;
+            justify-content: space-between;
+        }
+
+        .buttons-row,
+        .quantity-selector,
+        .footer-buttons {
+            margin: 10px 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 35px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .material-button {
+            font-size: 16px;
+            padding: 18px;
+            border-radius: 10px;
+            border: 3px solid #a0a0a0;
+            background-color: #fff;
+            color: #323232;
+            cursor: pointer;
+            margin-right: 20px;
+            box-shadow: 0 5px 5px -3px #ccc;
+            text-align: center;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .material-button.selected {
+            color: #3C66A7;
+            border: 3px solid #3C66A7;
+        }
+
+        .material-button .gas-bottle {
+            width: 100px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .material-button.selected .gas-bottle {
+            stroke: #3C66A7;
+            fill: #3C66A7;
+        }
+
+        .material-button:last-child {
+            margin-right: 0;
+        }
+
+        .buttons-row {
+            justify-content: center;
+        }
+
+        .shopping-cart {
+            font-size: 40px;
+            padding: 8px 16px;
+            margin-right: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: #a8c8f8;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .shopping-cart:hover {
+            background-color: #99bbee;
+        }
+
+        .right-align {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .modal-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .modal-content th,
+        .modal-content td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .modal-content th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .delete-row {
+            cursor: pointer;
+            color: red;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+        .footer-buttons button {
+            flex-grow: 1;
+            height: 60px;
+            border-radius: 10px;
+            padding: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .footer-buttons button:last-child {
+            margin-right: 0;
+        }
+
+        .selector-title {
+            font-size: 18px;
+            color: #333;
+            margin: 20px 30px 10px;
+            font-weight: bold;
+        }
+
+        .capacity-selector {
+            justify-content: center;
+            margin: 10px 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .capacity-button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #A9A9A9;
+            background-color: #fff;
+            color: #8d8c8c;
+            cursor: pointer;
+            margin: 0 5px;
+            text-align: center;
+            flex: 1;
+            box-shadow: 0 5px 5px -3px #ccc;
+        }
+
+        .capacity-button.selected {
+            background-color: #3C66A7;
+            color: #ffffff;
+            border: none;
+        }
+
+        .quantity-selector button,
+        .quantity-selector div {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+            border: 1px solid #c0bdbd;
+            border-radius: 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .quantity-selector div {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .add-order {
+            background-color: #EAF2FF;
+            color: #696969;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .add-order:hover {
+            background-color: #ddeaff;
+        }
+
+        .next-step {
+            background-color: #3C66A7;
+            color: #fff;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .next-step:hover {
+            background-color: #213e68;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backButton" onclick="window.location.href = 'Homepage.html'">
+            <svg class="back-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                fill="#000000">
+                <path d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+            </svg>
+        </button>
+        <div class="title-container">
+            <div class="title"><br>瓦斯訂購</div>
+            <button class="shopping-cart right-align">
+                <i class="material-icons">shopping_cart</i>
+            </button>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>购物车</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>数量</th>
+                                <th>类型</th>
+                                <th>规格</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartItems">
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="buttons-row">
+                <button class="material-button" onclick="selectMaterial(this)">
+                    <div style="width: 100px; height: auto; margin-bottom: 5px;">
+                        <svg class="gas-bottle" version="1.0" xmlns="http://www.w3.org/2000/svg" width="100"
+                            height="auto" viewBox="0 0 172.000000 224.000000" preserveAspectRatio="xMidYMid meet">
+                            <g transform="translate(0,224) scale(0.1,-0.1)" fill="currentColor" stroke="currenColor">
+                                <path d="M552 2228 c-9 -9 -12 -69 -12 -210 0 -151 -3 -199 -12 -202 -7 -2
+                        -35 -9 -63 -15 -158 -38 -295 -176 -330 -334 -14 -62 -15 -144 -13 -572 l3
+                        -500 26 -55 c14 -31 40 -72 58 -92 35 -40 140 -98 178 -98 21 0 23 -4 23 -56
+                        0 -102 -40 -94 450 -94 490 0 450 -8 450 94 0 51 2 56 23 56 38 0 123 46 167
+                        90 23 23 54 67 69 99 l26 56 3 495 c2 340 0 513 -8 554 -18 93 -57 164 -130
+                        237 -67 67 -125 101 -207 120 -27 7 -54 13 -60 15 -10 3 -13 51 -13 202 0 141
+                        -3 201 -12 210 -17 17 -599 17 -616 0z m558 -233 l0 -175 -105 0 -105 0 0 36
+                        c0 26 8 46 30 71 41 46 41 94 1 134 -41 41 -101 41 -142 0 -40 -40 -40 -88 1
+                        -134 22 -25 30 -45 30 -71 l0 -36 -105 0 -105 0 0 175 0 175 250 0 250 0 0
+                        -175z m-223 9 c3 -8 -2 -23 -11 -32 -15 -15 -17 -15 -32 0 -21 21 -11 48 16
+                        48 11 0 23 -7 27 -16z m319 -265 c79 -14 149 -50 205 -106 52 -50 99 -136 107
+                        -195 l5 -38 -545 0 c-582 0 -575 1 -566 -47 3 -17 34 -18 558 -23 l555 -5 3
+                        -407 2 -408 -670 0 -670 0 0 410 0 409 67 3 c63 3 68 5 71 27 5 31 -12 41 -75
+                        41 -50 0 -53 2 -53 25 0 51 42 136 95 193 59 64 122 100 205 118 72 16 623 18
+                        706 3z m314 -1319 c0 -56 -67 -142 -138 -177 l-57 -28 -418 -3 c-460 -4 -524
+                        1 -596 45 -50 31 -111 119 -111 160 l0 23 660 0 c659 0 660 0 660 -20z m-290
+                        -315 l0 -35 -372 2 -373 3 -3 33 -3 32 375 0 376 0 0 -35z" />
+                                <path d="M816 1219 c-15 -17 -34 -45 -42 -61 -12 -22 -19 -27 -27 -19 -23 23
+                        -48 11 -82 -43 -99 -156 -100 -331 -2 -434 57 -59 101 -77 197 -77 96 0 141
+                        18 196 77 58 61 69 93 69 199 0 95 -1 98 -45 185 -50 97 -69 116 -100 96 -17
+                        -10 -21 -8 -34 17 -24 46 -66 91 -86 91 -10 0 -30 -14 -44 -31z m85 -134 c32
+                        -71 50 -84 80 -54 l20 20 26 -58 c31 -67 41 -154 23 -207 -59 -179 -321 -179
+                        -380 0 -18 53 -8 140 23 207 l26 58 20 -20 c30 -30 49 -17 83 60 17 38 35 66
+                        40 62 6 -3 23 -34 39 -68z" />
+                            </g>
+                        </svg>
+                        <p> 複合材料 </p>
+                </button>
+                <button class="material-button" onclick="selectMaterial(this)">
+                    <div style="width: 100px; height: auto; margin-bottom: 5px;">
+                        <svg class="gas-bottle" version="1.0" xmlns="http://www.w3.org/2000/svg" width="100"
+                            height="auto" viewBox="0 0 172.000000 224.000000" preserveAspectRatio="xMidYMid meet">
+                            <g transform="translate(0,224) scale(0.1,-0.1)" fill="currentColor" stroke="currentColor">
+                                <path d="M552 2228 c-9 -9 -12 -69 -12 -210 0 -151 -3 -199 -12 -202 -7 -2
+                        -35 -9 -63 -15 -158 -38 -295 -176 -330 -334 -14 -62 -15 -144 -13 -572 l3
+                        -500 26 -55 c14 -31 40 -72 58 -92 35 -40 140 -98 178 -98 21 0 23 -4 23 -56
+                        0 -102 -40 -94 450 -94 490 0 450 -8 450 94 0 51 2 56 23 56 38 0 123 46 167
+                        90 23 23 54 67 69 99 l26 56 3 495 c2 340 0 513 -8 554 -18 93 -57 164 -130
+                        237 -67 67 -125 101 -207 120 -27 7 -54 13 -60 15 -10 3 -13 51 -13 202 0 141
+                        -3 201 -12 210 -17 17 -599 17 -616 0z m558 -233 l0 -175 -105 0 -105 0 0 36
+                        c0 26 8 46 30 71 41 46 41 94 1 134 -41 41 -101 41 -142 0 -40 -40 -40 -88 1
+                        -134 22 -25 30 -45 30 -71 l0 -36 -105 0 -105 0 0 175 0 175 250 0 250 0 0
+                        -175z m-223 9 c3 -8 -2 -23 -11 -32 -15 -15 -17 -15 -32 0 -21 21 -11 48 16
+                        48 11 0 23 -7 27 -16z m319 -265 c79 -14 149 -50 205 -106 52 -50 99 -136 107
+                        -195 l5 -38 -545 0 c-582 0 -575 1 -566 -47 3 -17 34 -18 558 -23 l555 -5 3
+                        -407 2 -408 -670 0 -670 0 0 410 0 409 67 3 c63 3 68 5 71 27 5 31 -12 41 -75
+                        41 -50 0 -53 2 -53 25 0 51 42 136 95 193 59 64 122 100 205 118 72 16 623 18
+                        706 3z m314 -1319 c0 -56 -67 -142 -138 -177 l-57 -28 -418 -3 c-460 -4 -524
+                        1 -596 45 -50 31 -111 119 -111 160 l0 23 660 0 c659 0 660 0 660 -20z m-290
+                        -315 l0 -35 -372 2 -373 3 -3 33 -3 32 375 0 376 0 0 -35z" />
+                                <path d="M816 1219 c-15 -17 -34 -45 -42 -61 -12 -22 -19 -27 -27 -19 -23 23
+                        -48 11 -82 -43 -99 -156 -100 -331 -2 -434 57 -59 101 -77 197 -77 96 0 141
+                        18 196 77 58 61 69 93 69 199 0 95 -1 98 -45 185 -50 97 -69 116 -100 96 -17
+                        -10 -21 -8 -34 17 -24 46 -66 91 -86 91 -10 0 -30 -14 -44 -31z m85 -134 c32
+                        -71 50 -84 80 -54 l20 20 26 -58 c31 -67 41 -154 23 -207 -59 -179 -321 -179
+                        -380 0 -18 53 -8 140 23 207 l26 58 20 -20 c30 -30 49 -17 83 60 17 38 35 66
+                        40 62 6 -3 23 -34 39 -68z" />
+                            </g>
+                        </svg>
+                        <p> 傳統鋼瓶 </p>
+                </button>
+            </div>
+            <p class="selector-title"> 瓦斯容量 </p>
+            <div class="capacity-selector">
+                <button class="capacity-button" onclick="selectCapacity(this)">5kg</button>
+                <button class="capacity-button" onclick="selectCapacity(this)">16kg</button>
+                <button class="capacity-button" onclick="selectCapacity(this)">20kg</button>
+            </div>
+            <p class="selector-title"> 數量 </p>
+            <div class="quantity-selector">
+                <button onclick="changeQuantity(-1)">-</button>
+                <div id="quantity">0</div>
+                <button onclick="changeQuantity(1)">+</button>
+            </div>
+            <div class="footer-buttons">
+                <button class="add-order" onclick="window.location.href = '#'">加入訂單</button>
+                <button class="next-step" onclick="window.location.href = 'DeliveryMethod.html'">下一步</button>
+            </div>
+        </div>
+        <script>
+            var selectedMaterial = null;
+            var selectedCapacity = null;
+            var selectedQuantity = 0;
+
+            function selectMaterial(button) {
+                selectedMaterial = button.textContent.trim();
+                document.querySelectorAll('.material-button').forEach(function (btn) {
+                    btn.classList.remove('selected');
+                    var svg = btn.querySelector('.gas-bottle');
+                    if (svg) {
+                        svg.classList.remove('selected');
+                    }
+                });
+                button.classList.add('selected');
+                var svg = button.querySelector('.gas-bottle');
+                if (svg) {
+                    svg.classList.add('selected');
+                }
+            }
+            function selectCapacity(button) {
+                selectedCapacity = button.textContent.trim();
+                document.querySelectorAll('.capacity-button').forEach(function (btn) {
+                    btn.classList.remove('selected');
+                });
+                button.classList.add('selected');
+            }
+            function changeQuantity(change) {
+                var quantityDiv = document.getElementById('quantity');
+                var currentQuantity = parseInt(quantityDiv.textContent);
+                var newQuantity = currentQuantity + change;
+                if (newQuantity >= 0) {
+                    quantityDiv.textContent = newQuantity;
+                }
+            }
+            function addToCart() {
+                var tbody = document.getElementById('cartItems');
+                var row = tbody.insertRow();
+                var quantityCell = row.insertCell(0);
+                var typeCell = row.insertCell(1);
+                var capacityCell = row.insertCell(2);
+                var deleteCell = row.insertCell(3);
+
+                quantityCell.textContent = document.getElementById('quantity').textContent;
+                typeCell.textContent = selectedMaterial || '未选择';
+                capacityCell.textContent = selectedCapacity || '未选择';
+                deleteCell.innerHTML = '<span class="delete-row" onclick="deleteRow(this)">&times;</span>';
+
+                resetSelection();
+            }
+            function deleteRow(btn) {
+                var row = btn.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+            }
+
+            function resetSelection() {
+                selectedMaterial = null;
+                selectedCapacity = null;
+                document.getElementById('quantity').textContent = 0;
+                document.querySelectorAll('.material-button').forEach(function (btn) {
+                    btn.classList.remove('selected');
+                });
+                document.querySelectorAll('.capacity-button').forEach(function (btn) {
+                    btn.classList.remove('selected');
+                });
+            }
+
+            document.querySelector('.add-order').addEventListener('click', addToCart);
+
+            var modal = document.getElementById("myModal");
+            var btn = document.querySelector(".shopping-cart");
+            var span = document.getElementsByClassName("close")[0];
+
+            btn.onclick = function () {
+                modal.style.display = "block";
+                document.getElementById('modalQuantity').textContent = document.getElementById('quantity').textContent;
+                document.getElementById('modalType').textContent = selectedMaterial || '未选择';
+                document.getElementById('modalCapacity').textContent = selectedCapacity || '未选择';
+            }
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            function clearOrder() {
+                selectedMaterial = null;
+                selectedCapacity = null;
+                selectedQuantity = 0;
+                document.getElementById('quantity').textContent = 0;
+                document.querySelectorAll('.material-button').forEach(function (btn) {
+                    btn.classList.remove('selected');
+                });
+                document.querySelectorAll('.capacity-button').forEach(function (btn) {
+                    btn.classList.remove('selected');
+                });
+                modal.style.display = "none";
+            }
+        </script>
+</body>
+
+</html>

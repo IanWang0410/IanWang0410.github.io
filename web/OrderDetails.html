@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            fill: #000000;
+        }
+
+        #backButton {
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 24px;
+            flex-grow: 1;
+        }
+
+        .card {
+            background-color: #e9e8e8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 5px 3px #d3d1d1;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .editButton {
+            width: calc(100% - 50px);
+            display: inline-block;
+            background-color: #b9c1ee;
+            border: none;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .editButton:hover {
+            background-color: rgb(142, 152, 209);
+            color: #fff;
+        }
+
+        .orderButton {
+            width: calc(100% - 50px);
+            display: inline-block;
+            background-color: #3C66A7;
+            border: none;
+            color: #fdfdfd;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .orderButton:hover {
+            background-color: #213e68;
+            color: #fff;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f2f2;
+        }
+
+        select {
+            padding: 4px;
+            margin-top: 5px;
+        }
+
+        .informationCard {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .detailsCard {
+            background-color: #dad7d7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .deliveryCard {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid black;
+            margin-bottom: 20px;
+        }
+
+        .confirmCard {
+            background-color: #dad7d7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .cardContent {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cardContent p {
+            margin: 0 10px 0 0;
+            font-size: 20px;
+        }
+
+        input[type="date"],
+        .cardContent select {
+            padding: 4px;
+            margin-left: 10px;
+            font-size: 17px;
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+
+        input[type="number"] {
+            max-width: 80px;
+            padding: 4px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+
+        .exchangeSelect {
+            max-width: 80px;
+            padding: 4px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .card2Content {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card2Content img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .informationCard img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .informationCard p {
+            margin: 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="backButton" onclick="window.location.href = 'DeliveryMethod.html'">
+                <svg class="back-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M11.67,3.87L9.9,2.1 0,12l9.9,9.9 1.77,-1.77L3.54,12z" />
+                </svg>
+            </button>
+            <div class="title">訂單明細</div>
+        </div>
+        <div class="card">
+            <div class="informationCard">
+                <img src="content/orderdetail_phone.png" alt="Phone" />
+                <p>放電話</p>
+            </div>
+            <div class="informationCard">
+                <img src="content/orderdetail_home.png" alt="Home" />
+                <p>放地址</p>
+            </div>
+        </div>
+        <h2>訂購内容</h2>
+        <table>
+            <tr>
+                <th>數量</th>
+                <th>類型</th>
+                <th>規格</th>
+                <th>是否兌換</th>
+                <th id="exchangeInputHeader" style="display: none;">兌換數量</th>
+                <th id="exchangeLimitHeader" style="display: none;">兌換上限</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>傳統鋼瓶</td>
+                <td>16kg</td>
+                <td>
+                    <select name="exchange" id="exchange" class="exchangeSelect">
+                        <option value="不兌換">不兌換</option>
+                        <option value="兌換">兌換</option>
+                    </select>
+                </td>
+                <td id="exchangeInputCell" style="display: none;">
+                    <input type="number" id="exchangeQuantity" min="0">
+                </td>
+                <td id="exchangeLimit" style="display: none;">
+                    <p style="font-style: italic; font-weight: bold;"></p>
+                </td>
+            </tr>
+        </table>
+        <h3>訂購内容</h3>
+        <div class="deliveryCard">
+            <div class="card2Content">
+                <img src="content/orderdetail_date.png" alt="Date" />
+                <p>配送日期</p>
+            </div>
+            <div class="cardContent">
+                <input type="date" id="deliveryDate" name="deliveryDate">
+            </div>
+        </div>
+        <div class="deliveryCard">
+            <div class="card2Content">
+                <img src="content/orderdetail_time.png" alt="Time" />
+                <p>配送時間</p>
+            </div>
+            <div class="cardContent">
+                <select name="Time" id="Time">
+                    <option value="time1">08:00 - 10:00</option>
+                    <option value="time2">10:00 - 12:00</option>
+                    <option value="time2">12:00 - 14:00</option>
+                    <option value="time2">14:00 - 16:00</option>
+                    <option value="time2">16:00 - 18:00</option>
+                    <option value="time2">18:00 - 20:00</option>
+                </select>
+            </div>
+        </div>
+        <div class="deliveryCard">
+            <div class="card2Content">
+                <img src="content/orderdetail_delivery.png" alt="Delivery" />
+                <p>配送方式</p>
+            </div>
+            <div class="cardContent">
+            </div>
+        </div>
+        <div class="button-container">
+            <a href="OrderGas.html" class="editButton">編輯訂單</a>
+            <button id="submitOrderButton" class="orderButton">送出訂單</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deliveryDate = document.getElementById('deliveryDate');
+            const deliveryTime = document.getElementById('deliveryTime');
+            const deliveryMethod = document.getElementById('deliveryMethod');
+
+            const selectedDate = sessionStorage.getItem('selectedDate');
+            const selectedTime = sessionStorage.getItem('selectedTime');
+            const selectedDeliveryMethod = sessionStorage.getItem('deliveryMethod');
+
+            if (selectedDate) {
+                deliveryDate.value = selectedDate;
+            }
+
+            if (selectedTime) {
+                deliveryTime.innerText = selectedTime;
+            }
+
+            if (selectedDeliveryMethod) {
+                deliveryMethod.innerText = selectedDeliveryMethod;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const exchangeSelect = document.getElementById('exchange');
+            const exchangeInputHeader = document.getElementById('exchangeInputHeader');
+            const exchangeInputCell = document.getElementById('exchangeInputCell');
+            const exchangeQuantity = document.getElementById('exchangeQuantity');
+            const exchangeLimitHeader = document.getElementById('exchangeLimitHeader');
+            const exchangeLimit = document.getElementById('exchangeLimit');
+
+            // Simulate the maximum exchange quantity from the database
+            const maxExchangeQuantity = 5; // Replace with actual API response
+
+            // Create a message element to show the exchange limit
+            exchangeLimit.style.fontSize = '14px';
+            exchangeLimit.textContent = `${maxExchangeQuantity} 公斤`;
+            exchangeLimit.style.display = 'none';
+
+            // Show/hide the exchange input field based on the selected option
+            exchangeSelect.addEventListener('change', function () {
+                if (exchangeSelect.value === '兌換') {
+                    exchangeInputHeader.style.display = '';
+                    exchangeInputCell.style.display = '';
+                    exchangeLimitHeader.style.display = '';
+                    exchangeLimit.style.display = '';
+                } else {
+                    exchangeInputHeader.style.display = 'none'; // Hide header
+                    exchangeInputCell.style.display = 'none';   // Hide input field
+                    exchangeQuantity.value = '';                // Clear input value
+                    exchangeLimitHeader.style.display = 'none';
+                    exchangeLimit.style.display = 'none';        // Hide the limit message
+                    exchangeQuantity.style.borderColor = '';    // Reset border color
+                }
+            });
+
+            // Validate input and update UI dynamically
+            exchangeQuantity.addEventListener('input', function () {
+                const inputValue = parseFloat(exchangeQuantity.value);
+
+                if (isNaN(inputValue) || inputValue <= maxExchangeQuantity) {
+                    exchangeQuantity.style.borderColor = ''; // Reset border color
+                    exchangeLimit.style.color = '';      
+                } else {
+                    exchangeQuantity.style.borderColor = 'red'; // Highlight the box
+                    exchangeLimit.style.color = 'red';
+                    exchangeQuantity.value = maxExchangeQuantity;
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectedMaterial = sessionStorage.getItem('selectedMaterial').trim();
+            const selectedCapacity = sessionStorage.getItem('selectedCapacity').trim();
+            const quantity = sessionStorage.getItem('quantity').trim();
+            const customerId = sessionStorage.getItem('customerId');
+
+            // Get the table body element
+            const tableBody = document.getElementById('orderDetailsTable');
+
+            // Create a new row
+            const newRow = document.createElement('tr');
+
+            // Create cells and add the session storage items
+            const cellQuantity = document.createElement('td');
+            cellQuantity.textContent = quantity;
+            newRow.appendChild(cellQuantity);
+
+            const cellType = document.createElement('td');
+            cellType.textContent = selectedMaterial;
+            newRow.appendChild(cellType);
+
+            const cellSpecification = document.createElement('td');
+            cellSpecification.textContent = selectedCapacity;
+            newRow.appendChild(cellSpecification);
+
+            const cellExchange = document.createElement('td');
+            const exchangeSelect = document.createElement('select');
+            exchangeSelect.name = "exchange"; // Add the name attribute here
+            const exchangeOptionNo = document.createElement('option');
+            exchangeOptionNo.value = "不兌換";
+            exchangeOptionNo.textContent = "不兌換";
+            const exchangeOptionYes = document.createElement('option');
+            exchangeOptionYes.value = "兌換";
+            exchangeOptionYes.textContent = "兌換";
+            exchangeSelect.appendChild(exchangeOptionNo);
+            exchangeSelect.appendChild(exchangeOptionYes);
+            cellExchange.appendChild(exchangeSelect);
+            newRow.appendChild(cellExchange);
+
+            // Append the new row to the table body
+            tableBody.appendChild(newRow);
+        });
+
+        document.getElementById('submitOrderButton').addEventListener('click', () => {
+            const orderDetails = {
+                id: sessionStorage.getItem('customerId'),
+                selectedMaterial: sessionStorage.getItem('selectedMaterial').trim(),
+                selectedCapacity: sessionStorage.getItem('selectedCapacity').trim(),
+                quantity: sessionStorage.getItem('quantity').trim(),
+                deliveryDate: document.getElementById('deliveryDate').value,
+                deliveryTime: sessionStorage.getItem('selectedTime'),
+                deliveryMethod: sessionStorage.getItem('deliveryMethod'),
+                exchange: document.querySelector('select[name="exchange"]').value
+            };
+
+            console.log('Order Details:', orderDetails); // Debugging: Log order details
+
+            fetch('http://54.199.33.241/gas/api/Customer_Order_Detail_2.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderDetails)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text(); // Changed from response.json() to response.text()
+            })
+            .then(text => {
+                if (!text) {
+                    throw new Error('Empty response body');
+                }
+                console.log('Response Text:', text); // Debugging: Log response text
+                return JSON.parse(text);
+            })
+            .then(data => {
+                console.log('Response Data:', data); // Debugging: Log response data
+                if (data.response === 'success') {
+                    window.location.href = 'OrderConfirmed.html';
+                } else {
+                    alert('Order submission failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error); // Improved error logging
+                alert('Order submission failed: ' + error.message);
+            });
+        });
+    </script>
+</body>
+
+</html>
